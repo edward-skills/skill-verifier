@@ -108,7 +108,7 @@ Do not treat file presence, an operator's `verified` declaration, or a target's 
 
 ## Compatibility and validation
 
-The 0.3.1 evaluator core passed independent macOS offline QA: 94 tests, zero skipped. This public 0.3.2 distribution adds installation, documentation, licensing and the demo; it does not claim new model-quality or native-activation evidence. See [validation and compatibility](docs/validation.md), [release notes](docs/releases/v0.3.2.md), and CI for current distribution checks.
+The 0.3.2 distribution passed independent macOS offline QA for GitHub installation, release integrity and installed-copy execution: five installer targets matched all 42 package files, all 94 author tests passed without skips, and 25 independent probes passed. A separate author retest reproduced fresh GitHub installation and offline execution. See the [0.3.2 QA record](docs/qa/v0.3.2.md), [validation and compatibility](docs/validation.md), and CI for the exact scope; installation is separate from native activation and model-quality evidence.
 
 The local boundary rejects hard-linked declared oracles and checks identity/content after the probe and task. Independent answer copies require runtime-content review. No race-free guarantee against privileged concurrent tampering or remote tools outside the boundary is made. Online model effects, native discovery, cross-harness behavior, Linux enforcement and external-account operations remain unverified.
 

@@ -8,7 +8,7 @@ It established command/plan handling, artifact checks, evidence states, environm
 
 ## Distribution 0.3.2
 
-This version adds packaging, rights notices, installation documentation and a synthetic no-account demo. Evaluator algorithms are unchanged from 0.3.1 except the version identifier. Public distribution checks include package lint, offline regression, demo controls and installation using the pinned `skills` CLI; CI is the current record of repository checks. No new independent QA acceptance of 0.3.2 is implied.
+This version adds packaging, rights notices, installation documentation and a synthetic no-account demo. Evaluator algorithms are unchanged from 0.3.1 except the version identifier. On 2026-11-02, independent QA accepted the tagged 0.3.2 GitHub installation, release integrity and installed-copy offline behavior. That is separate acceptance of this distribution, rather than an extension of the earlier core verdict. See the [0.3.2 QA record](qa/v0.3.2.md) for identities, counts and evidence boundaries. CI is the current record of repository checks.
 
 | Surface | Supported claim | Unverified |
 | --- | --- | --- |
@@ -21,9 +21,11 @@ This version adds packaging, rights notices, installation documentation and a sy
 | Linux | Portable Python core and optional bubblewrap implementation | Enforced backend behavior until tested on a compatible host |
 | Windows / chat-only hosts | Manual workflow or diagnostic adaptation | Bundled enforced execution |
 
-Installer tests are performed in fresh temporary projects with copied files and isolated home state. They verify discovery and package contents, without launching any agent model or changing global agent configuration.
+Installer tests are performed in fresh temporary projects with copied files and isolated home state. They verify installer package selection, destination and contents, without launching an agent or testing its native skill activation.
 
 Author distribution checks on 2026-11-02 reproduced all 94 tests without skips on macOS. The model-free clean/defect/blocked controls returned pass/fail/incomplete respectively. `skills` CLI 1.7.2 copy-installed the source for all five listed agent targets and checked every package file against its source hash. This is installer evidence, not real agent execution or native activation. Demo/test configurations explicitly discover the selected Python's library directories and framework binary, including an Xcode.app runtime; the evaluator does not grant the entire application tree.
+
+A subsequent author retest used the public GitHub install command with skills CLI 1.7.4, fresh HOME/project/npm-cache directories for all five targets, and installed copies rather than the development source. It passed the full 94-test macOS suite without skips, 21 additional installed-copy checks, and 24 replayed QA-script probes. The separately reported independent QA result was 25 probes; the 24-probe replay and an additional author-written exit-only check are identified separately in the QA record. Ubuntu and Linux enforcement were not rerun in this retest.
 
 ## Run checks
 
