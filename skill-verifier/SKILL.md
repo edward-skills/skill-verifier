@@ -2,7 +2,7 @@
 name: skill-verifier
 description: Evaluate an existing agent skill with task-specific QA, reproducible behavioral tests, baseline comparisons, cross-harness checks, and evidence-based repair recommendations. Use when testing skill quality, reviewing readiness, diagnosing unreliable skills, or verifying a revision.
 metadata:
-  version: "0.3.3"
+  version: "0.3.4"
   license: "Invocation-only; see LICENSE.md"
   repository: "https://github.com/edward-skills/skill-verifier"
 ---
@@ -12,6 +12,8 @@ metadata:
 Establish what a skill can reliably do, where it fails, and which changes improve it. Report confidence within the tested tasks, versions, tools, and harnesses; a passing sample cannot guarantee every future output.
 
 Any agent that can read Markdown can use this workflow. Automated checks need Python 3.9+; model comparisons additionally need a configured agent CLI. Native discovery and tool access depend on the harness.
+
+Inspecting a target skill does not require launching its original agent. Running this verifier inside a host and using its comparison runner to drive that host are separate adaptations. Record installation, offline execution, native activation and real task evidence separately; a named installer target is not a support boundary.
 
 For a first run, read [getting started](references/getting-started.md). The bundled `scripts/demo.py` runs a self-contained offline example without a model or account; choose a new output directory. Public usage rights are in [LICENSE.md](LICENSE.md).
 

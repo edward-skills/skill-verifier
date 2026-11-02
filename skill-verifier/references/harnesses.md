@@ -2,6 +2,30 @@
 
 The skill's workflow requires no vendor-specific tool name. Map these capabilities in the current host: file inspection, artifact creation, command execution, independent sessions, network/browser, secrets, state inspection, and rendering. For each, record available / unavailable / substituted and the effect on the test. A file copy isolates test data, not permissions or network access.
 
+## Choose the adaptation
+
+There are three different operations:
+
+- Inspect an exported target package locally. Its original agent need not be installed for source review or relevant helper/artifact tests. Platform-private behavior remains untested.
+- Use Skill Verifier inside an agent. Load the complete package through a documented native mechanism or explicit file reading, then resolve its helpers relative to that package. Automated offline checks need Python 3.9+, command execution, file access and retained evidence.
+- Drive an agent as a task worker. In addition to the above, the comparison runner needs an operator-reviewed CLI/SDK adapter, fresh sessions, response capture, permission mapping and baseline isolation. The bundled examples cover Codex, Claude Code and Gemini CLI only; other hosts use the same contract rather than a fabricated vendor recipe.
+
+Start with the [harness review worksheet](../examples/harness-review.json). It is a pending evidence worksheet, not an executable adapter or an accepted runner result. Fill it with observed capabilities and evidence; retain missing checks as `not-tested`. Reading official documentation does not establish installation or execution. For a chat-only host, keep a manual handoff with the task, loaded Skill revision, artifacts and rubric; unavailable command execution remains blocked.
+
+## Additional hosts
+
+Documentation checked on 2026-11-02 establishes possible integration surfaces, not execution acceptance of this Skill:
+
+| Host | Documented surface | Adaptation still required |
+| --- | --- | --- |
+| Hermes | [Agent Skills and local/external directories](https://hermes-agent.nousresearch.com/docs/user-guide/features/skills) | Complete-package discovery, tool/Python access, clean sessions and a task-worker adapter |
+| pi | [Portable Skill directories and explicit skill commands](https://github.com/earendil-works/pi/blob/main/packages/coding-agent/docs/skills.md) | Discovery of this package, tools, clean sessions and a task-worker adapter |
+| SpaceX Grok Bot | [Private reusable skills](https://docs.x.ai/grok-bot/skills-routines-and-automations) and a [persistent computer with terminal and files](https://docs.x.ai/grok-bot/overview) | Complete-package import, Python/backend access, independent task contexts and evidence export |
+| Meta Muse personal agent | [Built-in skills and a persistent Linux Secure VM](https://ai.meta.com/muse) | External package import is unverified; also verify command access, boundary availability and fresh task contexts |
+| Cursor, OpenCode, WorkBuddy and other capable hosts | Use documented Skill/file loading and the common protocol | Keep installation evidence separate from task execution and native activation |
+
+Grok Build and Muse Code are separate coding-agent products. Their documented Skill directory support does not establish Grok Bot or Muse personal-agent support. A persistent cloud VM does not prove the verifier's live-probed boundary works there. Do not install packages, import credentials, change global host settings or call a model merely to complete this worksheet.
+
 ## Portable execution contract
 
 The evaluator stages fixtures and an explicitly allowlisted candidate copy, builds a prompt, then gives a trusted adapter an argv list and file-backed stdin. The adapter executes a fresh session in a disposable task directory separate from the evaluator report tree. The agent writes task artifacts to `outputs/`, or the adapter extracts its final text as an output file. The task can read its prompt/response staging files; assertions, expected answers, original packages, snapshots, and opposing results remain outside its file grants. Captured `runs/.../work/` directories are evidence copies made after execution, not the live working directories. No resume/session reuse belongs in an adapter.

@@ -1,6 +1,10 @@
 # Validation and compatibility
 
-## Current 0.3.3 changes
+## Current 0.3.4 changes
+
+The current update changes instructions and adds a pending harness-review worksheet. It does not add a vendor adapter or alter the execution boundary. Documentation review for Hermes, pi, SpaceX Grok Bot and Meta Muse is distinct from installation, native activation and real task testing, which remain unverified. See [host adaptation](../skill-verifier/references/harnesses.md). Author macOS validation passed repository checks and all 97 offline tests without skips; no new native agent or model task was run.
+
+## Previous 0.3.3 changes
 
 No-helper targets now default to disabled document-review cases and record `execution_scope: source-review-only`; explicit profile choices and helper-domain selection are preserved. Offline results and reports carry a separate `whole_skill_verdict: not-assessed`, including when the local gate passes. The grading and filesystem-isolation requirements are unchanged.
 

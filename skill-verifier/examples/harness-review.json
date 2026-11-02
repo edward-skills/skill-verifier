@@ -1,0 +1,35 @@
+{
+  "document_type": "skill-verifier-harness-review",
+  "schema_version": 1,
+  "assessment_status": "pending",
+  "checked_at": null,
+  "host": {
+    "product": null,
+    "version": null,
+    "surface": null,
+    "operating_system": null
+  },
+  "use_mode": "run-verifier",
+  "skill_revision": null,
+  "documentation_urls": [],
+  "capabilities": {
+    "read_package": "unverified",
+    "write_artifacts": "unverified",
+    "run_python": "unverified",
+    "execute_commands": "unverified",
+    "filesystem_boundary": "unverified",
+    "fresh_task_session": "unverified",
+    "capture_trace": "unverified",
+    "inspect_artifacts": "unverified"
+  },
+  "evidence": {
+    "installation": {"status": "not-tested", "paths": []},
+    "explicit_loading": {"status": "not-tested", "paths": []},
+    "offline_execution": {"status": "not-tested", "paths": []},
+    "native_activation": {"status": "not-tested", "paths": []},
+    "agent_tasks": {"status": "not-tested", "paths": []},
+    "baseline_isolation": {"status": "not-tested", "paths": []}
+  },
+  "task_worker_adapter": null,
+  "limitations": []
+}

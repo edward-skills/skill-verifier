@@ -1,6 +1,6 @@
 # Skill Verifier
 
-Current version: **0.3.3**. Targets without supported helpers start with document-review drafts; offline results explicitly keep the whole-skill verdict unassessed. See [release notes](docs/releases/v0.3.3.md). Independent acceptance below applies to the frozen 0.3.2 release; these additions have separate author/CI evidence.
+Current version: **0.3.4**. Host adaptation separates package inspection, running the verifier and driving another agent. See [release notes](docs/releases/v0.3.4.md). Independent acceptance below applies to the frozen 0.3.2 release; later additions have separate author/CI evidence.
 
 [All Skills](https://github.com/edward-skills) · [简体中文](README.zh-CN.md) · [Validation scope](docs/validation.md)
 
@@ -109,6 +109,8 @@ python -m unittest discover -s skill-verifier/tests -v
 Do not treat file presence, an operator's `verified` declaration, or a target's success statement as quality evidence. Raw advisory failures remain visible but do not turn an agent-only rule into a helper defect.
 
 ## Compatibility and validation
+
+Compatibility is based on available tools, not a vendor allowlist. The package includes Codex/Claude Code/Gemini CLI adapter examples; Cursor/OpenCode installer evidence and Aident/WorkBuddy synchronization are different claims. Hermes, pi, SpaceX Grok Bot and Meta Muse have documented adaptation notes, with this Skill's untested installation and task behavior kept explicit. See [harness adaptation](skill-verifier/references/harnesses.md) and the [pending capability worksheet](skill-verifier/examples/harness-review.json).
 
 The 0.3.2 distribution passed independent macOS offline QA for GitHub installation, release integrity and installed-copy execution: five installer targets matched all 42 package files, all 94 author tests passed without skips, and 25 independent probes passed. A separate author retest reproduced fresh GitHub installation and offline execution. See the [0.3.2 QA record](docs/qa/v0.3.2.md), [validation and compatibility](docs/validation.md), and CI for the exact scope; installation is separate from native activation and model-quality evidence.
 

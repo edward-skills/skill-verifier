@@ -1,6 +1,6 @@
 # Skill Verifier
 
-当前版本：**0.3.3**。没有可识别 helper 的目标默认生成文档审阅草案；离线报告单独显示整体 skill 能力尚未评估。[新版说明](docs/releases/v0.3.3.md)。下文的独立验收对应冻结的 0.3.2，新改动使用单独的作者/CI 证据。
+当前版本：**0.3.4**。区分检查导出的 skill、在宿主内使用验证器，以及驱动另一个 agent 执行任务。[新版说明](docs/releases/v0.3.4.md)。下文的独立验收对应冻结的 0.3.2，后续改动使用单独的作者/CI 证据。
 
 [全部 Skills](https://github.com/edward-skills) · [English](README.md) · [验证范围](docs/validation.md)
 
@@ -66,6 +66,8 @@ python3 skill-verifier/scripts/verifier.py offline-run --skill /目标skill目�
 JSON/YAML/CSV、精确文本、哈希和图片属性可以确定性检查；语义、视觉可读性等使用 manual rubric，未导入绑定原始产物哈希的评审前保持 pending。根因假设与修复验证分别标记，不自动把建议写成已证实结论。
 
 ## 依赖与验证边界
+
+兼容性按实际工具能力判断，不按厂商白名单限定。随包的 Codex、Claude Code、Gemini CLI adapter 示例，与 Cursor/OpenCode 安装证据、Aident/WorkBuddy 同步检查是不同层次。Hermes、pi、SpaceX Grok Bot、Meta Muse 已有文档适配说明，其安装、原生触发和真实任务仍未验收。见[宿主适配](skill-verifier/references/harnesses.md)与[待填写的能力模板](skill-verifier/examples/harness-review.json)。
 
 - 核心只需 Python 3.9+；完整 YAML 用可选 PyYAML，像素检查用可选 Pillow。
 - 本地强制隔离已独立验证的是 macOS；Linux bubblewrap 实机和 Windows 强制隔离未通过本次验收。
