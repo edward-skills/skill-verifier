@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "name": "claude-code",
+  "argv": [
+    "claude",
+    "-p",
+    "--no-session-persistence",
+    "--output-format",
+    "json",
+    "--permission-mode",
+    "default"
+  ],
+  "response": "claude-json",
+  "timeout_seconds": 180,
+  "environment": {
+    "harness_version": null,
+    "model": null,
+    "settings": null
+  },
+  "baseline_isolation": {
+    "status": "unverified",
+    "evidence": ""
+  },
+  "filesystem_isolation": {
+    "mode": "none"
+  },
+  "process_environment": {
+    "inherit": []
+  }
+}

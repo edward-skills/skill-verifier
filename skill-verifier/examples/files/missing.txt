@@ -1,0 +1,3 @@
+Invoice 204
+Vendor: New York Paper Co.
+Total: 42.00

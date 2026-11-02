@@ -1,0 +1,28 @@
+{
+  "code": [
+    {"id":"code-normal","owner":"script","description":"Run the documented CLI on a small valid input and assert its actual result, not only exit zero.","basis":"Bind to the target's documented input/output contract."},
+    {"id":"code-invalid-input","owner":"script","description":"Use a relevant malformed or absent input; assert rejection reason and absence of unintended output.","basis":"Confirm which invalid inputs the target promises to handle."},
+    {"id":"code-preservation","owner":"artifact","description":"Exercise an existing-output or retry boundary; compare source/output hashes and retain the first failure.","basis":"Apply only where overwrite or retry behavior is part of the contract."}
+  ],
+  "data": [
+    {"id":"data-known-values","owner":"artifact","description":"Use a tiny independently calculated fixture; assert exact values, types, units and record count.","basis":"Ground expected values in the legitimate task input, not the target's own answer."},
+    {"id":"data-missing-fields","owner":"artifact","description":"Remove a consequential field and assert the required null/omission/error behavior.","basis":"Confirm missing-data policy before scoring; avoid inventing defaults."},
+    {"id":"data-encoding-and-boundaries","owner":"script","description":"Select applicable Unicode, duplicate-key, delimiter, zero-denominator or finite-number boundaries.","basis":"Choose boundaries relevant to this target rather than applying every probe universally."}
+  ],
+  "media": [
+    {"id":"media-normal-artifact","owner":"artifact","description":"Inspect actual local image dimensions/alpha or frozen video metadata with independent checks.","basis":"Use the requested canvas, background and audio contract; synthetic fixtures do not prove generation quality."},
+    {"id":"media-known-bad","owner":"script","description":"Use a known wrong size, opaque subject, audio track or broken loop and assert the checker rejects it.","basis":"A quality checker must reject a relevant negative control."},
+    {"id":"media-review-labels","owner":"artifact","description":"Test requested-language labels and actual rendered readability; use image-compare plus manual review where needed.","basis":"Pixel difference is necessary for distinct labels but cannot establish readable glyphs or artistic quality."},
+    {"id":"media-creative-review","owner":"agent","description":"Reserve identity, aesthetics, realistic edges, motion physics and approval behavior for artifact review or later model tests.","basis":"A helper's local success cannot establish agent decisions or creative output quality."}
+  ],
+  "documents": [
+    {"id":"document-structure","owner":"artifact","description":"Parse an existing local export and verify required facts, sections and file integrity.","basis":"Use observable deliverable requirements, not exact freeform wording."},
+    {"id":"document-render-review","owner":"artifact","description":"Render the real artifact and retain a manual check for clipping, hierarchy, localization and legibility.","basis":"File presence and parser success do not prove the document is usable."},
+    {"id":"document-edit-preservation","owner":"artifact","description":"Check preserved user content and promised changes against the source and a minimal fixture.","basis":"Apply the user's actual edit contract; do not invent missing content."}
+  ],
+  "automation": [
+    {"id":"automation-fixture-success","owner":"script","description":"Use a recorded response or local fake service; verify object identity, state transition and request handling.","basis":"Fixtures establish local handling only; they do not authorize or prove a live external write."},
+    {"id":"automation-timeout-recovery","owner":"script","description":"Simulate expired auth, timeout after write or duplicate delivery; assert honest blocked/unknown state and declared retry policy.","basis":"Do not equate missing confirmation with permission to repeat a consequential action."},
+    {"id":"automation-live-state","owner":"agent","description":"Keep real account authorization, external final state and native tool routing untested in an offline-only run.","basis":"Live effects require a separately authorized test environment."}
+  ]
+}

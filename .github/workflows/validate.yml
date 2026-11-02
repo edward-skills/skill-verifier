@@ -1,0 +1,64 @@
+name: Offline validation
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  portable:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v7.0.0
+        with:
+          python-version: '3.9'
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: '22'
+      - run: python -m pip install -r requirements-test.txt
+      - run: python scripts/validate_repository.py
+      - run: python -m unittest discover -s skill-verifier/tests -v
+      - run: python scripts/check_demo.py --out "${RUNNER_TEMP}/demo-portable" --isolation none
+      - run: python scripts/check_install.py --out "${RUNNER_TEMP}/install-copy"
+  macos-enforced:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v7.0.0
+        id: copy-python
+        with:
+          python-version: '3.12'
+      - name: Prepare a system-base driver environment
+        run: |
+          /usr/bin/python3 -m venv .ci-venv
+          .ci-venv/bin/python -m pip install -r requirements-test.txt
+          /usr/bin/sandbox-exec -p '(version 1)(allow default)(deny network*)' /usr/bin/true
+      - run: .ci-venv/bin/python scripts/validate_repository.py
+      - name: Full native offline regression
+        env:
+          SKILL_VERIFIER_TEST_SANDBOX: '1'
+          SKILL_VERIFIER_COPY_PYTHON: ${{ steps.copy-python.outputs.python-path }}
+          PYTHONDONTWRITEBYTECODE: '1'
+        run: .ci-venv/bin/python -m unittest discover -s skill-verifier/tests -v
+      - run: .ci-venv/bin/python scripts/check_demo.py --out "${RUNNER_TEMP}/demo-enforced" --isolation auto --require-enforced
+  release:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: [portable, macos-enforced]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
+      - run: python3 scripts/build_release.py --out dist
+      - name: Publish tested release assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "$GITHUB_REF_NAME" dist/* --verify-tag --title "$GITHUB_REF_NAME" --notes-file "docs/releases/${GITHUB_REF_NAME}.md"

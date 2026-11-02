@@ -1,0 +1,45 @@
+{
+  "schema_version": "1.0",
+  "project": "avatar-ip-project",
+  "persona_id": "p01",
+  "use_case": "reusable product avatar and digital employee",
+  "stage": "neutral-base",
+  "selected": {
+    "style": "cute-collectible-3d",
+    "proportion": "cute-large-head-upper-body",
+    "gender_presentation": "androgynous-neutral",
+    "body_construction": "compact-neutral",
+    "face_shape": "rounded-square",
+    "hair": "sculpted-bob-undercut",
+    "outfit": "signature-source-reconstruction",
+    "wearable": "none",
+    "prop": "none",
+    "palette": "cobalt-ultraviolet",
+    "composition": "neutral-front-upper-body"
+  },
+  "identity": {
+    "visual_age": "young adult",
+    "skin_tone": "define from the approved identity source",
+    "eye_details": "preserve from the approved identity source",
+    "distinctive_features": [],
+    "personality_cues": [
+      "cool",
+      "approachable",
+      "confident"
+    ]
+  },
+  "references": {
+    "identity_source": "",
+    "style_source": "",
+    "composition_source": "",
+    "signature_look_source": ""
+  },
+  "stage_details": {
+    "signature_source_description": "",
+    "scene_action": "",
+    "background_contract": "transparent subject master plus separately editable background",
+    "target_size": "1024x1024"
+  },
+  "custom_prompt_blocks": [],
+  "custom_exclusions": []
+}

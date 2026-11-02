@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "candidate": [
+    "scripts/assemble_avatar_prompt.py",
+    "scripts/build_review_sheet.py",
+    "scripts/init_avatar_project.py",
+    "scripts/inspect_avatar_delivery.py",
+    "scripts/normalize_avatar_png.py",
+    "assets/templates/acceptance-ledger.md",
+    "assets/templates/approval-receipt.yaml",
+    "assets/templates/asset-manifest.csv",
+    "assets/templates/avatar-project-brief.yaml",
+    "assets/templates/h3-max-loop-input.example.json",
+    "assets/templates/ip-template-catalog.json",
+    "assets/templates/ip-template-selection.example.json",
+    "assets/templates/modular-system-contract.yaml",
+    "assets/templates/persona-contract.yaml",
+    "assets/templates/prompt-contract.yaml",
+    "assets/templates/reference-role-map.yaml"
+  ],
+  "baseline": []
+}

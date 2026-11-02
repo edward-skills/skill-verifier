@@ -1,0 +1,7 @@
+{
+  "schema_version": 1,
+  "name": "local-offline-diagnostic",
+  "tools": {"python":["python3"]},
+  "filesystem_isolation": {"mode":"none"},
+  "process_environment": {"inherit":[]}
+}

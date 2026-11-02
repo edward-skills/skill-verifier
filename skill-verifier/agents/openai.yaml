@@ -1,0 +1,4 @@
+interface:
+  display_name: "Skill Verifier"
+  short_description: "Test skill behavior, portability, and regressions"
+  default_prompt: "Use $skill-verifier to audit this skill offline, report evidence and untested scope, and recommend fixes with regression checks."

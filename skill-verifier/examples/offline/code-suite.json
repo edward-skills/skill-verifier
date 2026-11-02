@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "kind": "offline",
+  "name": "CLI data transform draft",
+  "cases": [
+    {
+      "id": "normal-value",
+      "profile": "data",
+      "description": "Adapt the script path/flags to a documented integer-doubling CLI before enabling.",
+      "enabled": false,
+      "contract": {"owner":"script","strength":"required","basis":"Example contract: input integer 4 produces JSON with result 8."},
+      "steps": [{"id":"transform","argv":["python","{skill}/scripts/double.py","4"],"stdout_artifact":"result.json"}],
+      "checks": [{"id":"value","type":"json-value","path":"result.json","pointer":"/result","expected":8}]
+    }
+  ]
+}

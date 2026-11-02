@@ -1,0 +1,3 @@
+# Optional dependencies used by the documented offline verification environment.
+PyYAML==6.0.3
+Pillow==11.3.0

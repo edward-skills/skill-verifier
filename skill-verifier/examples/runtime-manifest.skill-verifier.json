@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "candidate": [
+    "scripts/verifier.py",
+    "scripts/isolation.py",
+    "scripts/offline.py",
+    "scripts/demo.py",
+    "LICENSE.md",
+    "examples/offline/profiles.json",
+    "references/task-profiles.md",
+    "references/evaluation.md",
+    "references/harnesses.md",
+    "references/runner.md",
+    "references/offline.md",
+    "references/getting-started.md",
+    "references/report-and-repair.md",
+    "references/sources.md"
+  ],
+  "baseline": [
+    "scripts/verifier.py",
+    "scripts/isolation.py",
+    "references/task-profiles.md",
+    "references/evaluation.md",
+    "references/harnesses.md",
+    "references/runner.md",
+    "references/report-and-repair.md",
+    "references/sources.md"
+  ]
+}

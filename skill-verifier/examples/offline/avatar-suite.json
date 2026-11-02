@@ -1,0 +1,1065 @@
+{
+  "schema_version": 1,
+  "kind": "offline",
+  "name": "Avatar helper offline field suite (target 1.2.0)",
+  "cases": [
+    {
+      "id": "cli-help",
+      "profile": "code",
+      "description": "SKILL.md: bundled helpers support --help.",
+      "contract": {
+        "owner": "script",
+        "strength": "required",
+        "basis": "SKILL.md: bundled helpers support --help."
+      },
+      "inputs": [],
+      "steps": [
+        {
+          "id": "runtime",
+          "argv": [
+            "python-deps"
+          ],
+          "role": "precondition"
+        },
+        {
+          "id": "help-1",
+          "argv": [
+            "python",
+            "{skill}/scripts/assemble_avatar_prompt.py",
+            "--help"
+          ],
+          "stdout_artifact": "help-1.txt"
+        },
+        {
+          "id": "help-2",
+          "argv": [
+            "python",
+            "{skill}/scripts/build_review_sheet.py",
+            "--help"
+          ],
+          "stdout_artifact": "help-2.txt"
+        },
+        {
+          "id": "help-3",
+          "argv": [
+            "python",
+            "{skill}/scripts/init_avatar_project.py",
+            "--help"
+          ],
+          "stdout_artifact": "help-3.txt"
+        },
+        {
+          "id": "help-4",
+          "argv": [
+            "python",
+            "{skill}/scripts/inspect_avatar_delivery.py",
+            "--help"
+          ],
+          "stdout_artifact": "help-4.txt"
+        },
+        {
+          "id": "help-5",
+          "argv": [
+            "python",
+            "{skill}/scripts/normalize_avatar_png.py",
+            "--help"
+          ],
+          "stdout_artifact": "help-5.txt"
+        }
+      ],
+      "checks": [
+        {
+          "id": "usage-1",
+          "type": "text-contains",
+          "path": "help-1.txt",
+          "text": "usage:"
+        },
+        {
+          "id": "usage-2",
+          "type": "text-contains",
+          "path": "help-2.txt",
+          "text": "usage:"
+        },
+        {
+          "id": "usage-3",
+          "type": "text-contains",
+          "path": "help-3.txt",
+          "text": "usage:"
+        },
+        {
+          "id": "usage-4",
+          "type": "text-contains",
+          "path": "help-4.txt",
+          "text": "usage:"
+        },
+        {
+          "id": "usage-5",
+          "type": "text-contains",
+          "path": "help-5.txt",
+          "text": "usage:"
+        }
+      ]
+    },
+    {
+      "id": "scaffold-normal",
+      "profile": "code",
+      "description": "Initializer must emit parseable resumable contracts and requested persona IDs.",
+      "contract": {
+        "owner": "script",
+        "strength": "required",
+        "basis": "Initializer must emit parseable resumable contracts and requested persona IDs."
+      },
+      "inputs": [],
+      "steps": [
+        {
+          "id": "runtime",
+          "argv": [
+            "python-deps"
+          ],
+          "role": "precondition"
+        },
+        {
+          "id": "init",
+          "argv": [
+            "python",
+            "{skill}/scripts/init_avatar_project.py",
+            "{outputs}/project",
+            "--project-name",
+            "offline-demo",
+            "--personas",
+            "3"
+          ]
+        }
+      ],
+      "checks": [
+        {
+          "id": "brief",
+          "type": "yaml-valid",
+          "path": "project/brief/avatar-project-brief.yaml"
+        },
+        {
+          "id": "persona",
+          "type": "json-value",
+          "path": "project/brief/ip-template-selection-p03.json",
+          "pointer": "/persona_id",
+          "expected": "p03"
+        },
+        {
+          "id": "unapproved",
+          "type": "directory-count",
+          "path": "project/approved",
+          "expected": 0
+        }
+      ]
+    },
+    {
+      "id": "scaffold-quoted-name",
+      "profile": "data",
+      "description": "Human project names must not corrupt emitted JSON/YAML while initialization reports success.",
+      "contract": {
+        "owner": "script",
+        "strength": "required",
+        "basis": "Human project names must not corrupt emitted JSON/YAML while initialization reports success."
+      },
+      "inputs": [],
+      "steps": [
+        {
+          "id": "runtime",
+          "argv": [
+            "python-deps"
+          ],
+          "role": "precondition"
+        },
+        {
+          "id": "init",
+          "argv": [
+            "python",
+            "{skill}/scripts/init_avatar_project.py",
+            "{outputs}/project",
+            "--project-name",
+            "财务 \"助手\": QA"
+          ]
+        }
+      ],
+      "checks": [
+        {
+          "id": "json",
+          "type": "json-valid",
+          "path": "project/brief/ip-template-selection-p01.json"
+        },
+        {
+          "id": "yaml",
+          "type": "yaml-valid",
+          "path": "project/brief/avatar-project-brief.yaml"
+        }
+      ],
+      "diagnosis": {
+        "hypothesis": "User text appears interpolated into JSON/YAML without scalar escaping.",
+        "confidence": "high",
+        "repair": "Serialize project-name scalars in both global and per-persona replacements; preserve exact input after parsing.",
+        "regression": "Retain this quoted/colon name plus plain names and source-preservation checks."
+      }
+    },
+    {
+      "id": "neutral-stage-locks",
+      "profile": "data",
+      "description": "Neutral-base must override final outfit, wearable, prop and camera choices.",
+      "contract": {
+        "owner": "script",
+        "strength": "required",
+        "basis": "Neutral-base must override final outfit, wearable, prop and camera choices."
+      },
+      "inputs": [
+        {
+          "source": "files/selection.json",
+          "dest": "selection.json"
+        }
+      ],
+      "steps": [
+        {
+          "id": "runtime",
+          "argv": [
+            "python-deps"
+          ],
+          "role": "precondition"
+        },
+        {
+          "id": "resolve",
+          "argv": [
+            "python",
+            "{skill}/scripts/assemble_avatar_prompt.py",
+            "{inputs}/selection.json",
+            "--stage",
+            "neutral-base",
+            "--resolved-output",
+            "{outputs}/resolved.json"
+          ]
+        }
+      ],
+      "checks": [
+        {
+          "id": "camera",
+          "type": "json-value",
+          "path": "resolved.json",
+          "pointer": "/selected_resolved/composition",
+          "expected": "neutral-front-upper-body"
+        },
+        {
+          "id": "outfit",
+          "type": "json-value",
+          "path": "resolved.json",
+          "pointer": "/forced_by_stage/outfit",
+          "expected": "plain-base-tee"
+        },
+        {
+          "id": "prop",
+          "type": "json-value",
+          "path": "resolved.json",
+          "pointer": "/forced_by_stage/prop",
+          "expected": "none"
+        },
+        {
+          "id": "wearable",
+          "type": "json-value",
+          "path": "resolved.json",
+          "pointer": "/forced_by_stage/wearable",
+          "expected": "none"
+        }
+      ]
+    },
+    {
+      "id": "signature-source-advisory",
+      "profile": "media",
+      "description": "ip-template-system.md addresses source checking in the agent workflow; helper enforcement is a defensive recommendation.",
+      "contract": {
+        "owner": "agent",
+        "strength": "recommendation",
+        "basis": "ip-template-system.md addresses source checking in the agent workflow; helper enforcement is a defensive recommendation."
+      },
+      "inputs": [
+        {
+          "source": "files/missing-source.json",
+          "dest": "missing-source.json"
+        }
+      ],
+      "steps": [
+        {
+          "id": "runtime",
+          "argv": [
+            "python-deps"
+          ],
+          "role": "precondition"
+        },
+        {
+          "id": "resolve",
+          "argv": [
+            "python",
+            "{skill}/scripts/assemble_avatar_prompt.py",
+            "{inputs}/missing-source.json",
+            "--stage",
+            "signature-look"
+          ],
+          "expected_exit": "nonzero"
+        }
+      ],
+      "checks": [],
+      "diagnosis": {
+        "hypothesis": "The resolver validates option IDs but leaves source availability to the caller.",
+        "confidence": "high",
+        "repair": "Consider checking declared signature/outfit references before writing a reconstruction prompt; do not infer full-agent approval failure.",
+        "regression": "Missing-reference probe plus present-reference control; keep this advisory unless the helper contract is strengthened."
+      }
+    },
+    {
+      "id": "signature-source-present",
+      "profile": "media",
+      "description": "A declared reference and its description must survive signature prompt resolution.",
+      "contract": {
+        "owner": "script",
+        "strength": "required",
+        "basis": "A declared reference and its description must survive signature prompt resolution."
+      },
+      "inputs": [
+        {
+          "source": "files/present-source.json",
+          "dest": "present-source.json"
+        },
+        {
+          "source": "files/alpha.png",
+          "dest": "alpha.png"
+        }
+      ],
+      "steps": [
+        {
+          "id": "runtime",
+          "argv": [
+            "python-deps"
+          ],
+          "role": "precondition"
+        },
+        {
+          "id": "resolve",
+          "argv": [
+            "python",
+            "{skill}/scripts/assemble_avatar_prompt.py",
+            "{inputs}/present-source.json",
+            "--stage",
+            "signature-look"
+          ],
+          "stdout_artifact": "prompt.txt"
+        }
+      ],
+      "checks": [
+        {
+          "id": "description",
+          "type": "text-contains",
+          "path": "prompt.txt",
+          "text": "Approved synthetic red fixture source"
+        }
+      ]
+    },
+    {
+      "id": "normalize-transparent",
+      "profile": "media",
+      "description": "A transparent source should retain meaningful alpha on the requested canvas.",
+      "contract": {
+        "owner": "script",
+        "strength": "required",
+        "basis": "A transparent source should retain meaningful alpha on the requested canvas."
+      },
+      "inputs": [
+        {
+          "source": "files/alpha.png",
+          "dest": "alpha.png"
+        }
+      ],
+      "steps": [
+        {
+          "id": "runtime",
+          "argv": [
+            "python-deps"
+          ],
+          "role": "precondition"
+        },
+        {
+          "id": "normalize",
+          "argv": [
+            "python",
+            "{skill}/scripts/normalize_avatar_png.py",
+            "{inputs}/alpha.png",
+            "--output-dir",
+            "{outputs}/normalized",
+            "--canvas",
+            "96x96",
+            "--subject-height",
+            "72",
+            "--bottom",
+            "88"
+          ]
+        }
+      ],
+      "checks": [
+        {
+          "id": "size",
+          "type": "image-property",
+          "path": "normalized/alpha.png",
+          "property": "size",
+          "expected": [
+            96,
+            96
+          ]
+        },
+        {
+          "id": "alpha",
+          "type": "image-property",
+          "path": "normalized/alpha.png",
+          "property": "meaningful-alpha",
+          "expected": true
+        }
+      ]
+    },
+    {
+      "id": "reject-opaque-source",
+      "profile": "media",
+      "description": "An opaque source without explicit chroma key must reject with a useful reason.",
+      "contract": {
+        "owner": "script",
+        "strength": "required",
+        "basis": "An opaque source without explicit chroma key must reject with a useful reason."
+      },
+      "inputs": [
+        {
+          "source": "files/opaque.png",
+          "dest": "opaque.png"
+        }
+      ],
+      "steps": [
+        {
+          "id": "runtime",
+          "argv": [
+            "python-deps"
+          ],
+          "role": "precondition"
+        },
+        {
+          "id": "reject",
+          "argv": [
+            "python",
+            "{skill}/scripts/normalize_avatar_png.py",
+            "{inputs}/opaque.png",
+            "--output-dir",
+            "{outputs}/normalized"
+          ],
+          "expected_exit": "nonzero",
+          "stderr_artifact": "reason.txt"
+        }
+      ],
+      "checks": [
+        {
+          "id": "reason",
+          "type": "text-contains",
+          "path": "reason.txt",
+          "text": "no meaningful alpha"
+        },
+        {
+          "id": "no-output",
+          "type": "directory-count",
+          "path": "normalized",
+          "expected": 0
+        }
+      ]
+    },
+    {
+      "id": "review-board-layout",
+      "profile": "media",
+      "description": "Contact sheet must honor grid/cell/title dimensions for two labeled inputs.",
+      "contract": {
+        "owner": "script",
+        "strength": "required",
+        "basis": "Contact sheet must honor grid/cell/title dimensions for two labeled inputs."
+      },
+      "inputs": [
+        {
+          "source": "files/alpha.png",
+          "dest": "alpha.png"
+        },
+        {
+          "source": "files/opaque.png",
+          "dest": "opaque.png"
+        }
+      ],
+      "steps": [
+        {
+          "id": "runtime",
+          "argv": [
+            "python-deps"
+          ],
+          "role": "precondition"
+        },
+        {
+          "id": "sheet",
+          "argv": [
+            "python",
+            "{skill}/scripts/build_review_sheet.py",
+            "{inputs}/alpha.png",
+            "{inputs}/opaque.png",
+            "--output",
+            "{outputs}/sheet.png",
+            "--columns",
+            "2",
+            "--cell",
+            "160x160",
+            "--labels",
+            "SOURCE",
+            "CANDIDATE",
+            "--title",
+            "Offline fixture review"
+          ]
+        }
+      ],
+      "checks": [
+        {
+          "id": "size",
+          "type": "image-property",
+          "path": "sheet.png",
+          "property": "size",
+          "expected": [
+            320,
+            248
+          ]
+        }
+      ]
+    },
+    {
+      "id": "chinese-label-distinction",
+      "profile": "media",
+      "description": "Requested Chinese labels 财务 and 客服 must remain visually distinguishable; pixel difference is necessary but not sufficient for readability.",
+      "contract": {
+        "owner": "artifact",
+        "strength": "required",
+        "basis": "Requested Chinese labels 财务 and 客服 must remain visually distinguishable; pixel difference is necessary but not sufficient for readability."
+      },
+      "inputs": [
+        {
+          "source": "files/alpha.png",
+          "dest": "alpha.png"
+        }
+      ],
+      "steps": [
+        {
+          "id": "runtime",
+          "argv": [
+            "python-deps"
+          ],
+          "role": "precondition"
+        },
+        {
+          "id": "finance",
+          "argv": [
+            "python",
+            "{skill}/scripts/build_review_sheet.py",
+            "{inputs}/alpha.png",
+            "--output",
+            "{outputs}/finance.png",
+            "--columns",
+            "1",
+            "--cell",
+            "160x160",
+            "--labels",
+            "财务"
+          ]
+        },
+        {
+          "id": "support",
+          "argv": [
+            "python",
+            "{skill}/scripts/build_review_sheet.py",
+            "{inputs}/alpha.png",
+            "--output",
+            "{outputs}/support.png",
+            "--columns",
+            "1",
+            "--cell",
+            "160x160",
+            "--labels",
+            "客服"
+          ]
+        }
+      ],
+      "checks": [
+        {
+          "id": "different-pixels",
+          "type": "image-compare",
+          "path": "finance.png",
+          "other": "support.png",
+          "expected": false,
+          "severity": "minor"
+        }
+      ],
+      "diagnosis": {
+        "hypothesis": "The helper uses a default font without the requested CJK glyphs.",
+        "confidence": "high",
+        "repair": "Support an explicit licensed font and report missing glyphs; inspect rendered labels, not only pixel difference.",
+        "regression": "Retain the two CJK labels and ASCII/layout controls; perform a readable-glyph review after repair."
+      }
+    },
+    {
+      "id": "silent-video-control",
+      "profile": "media",
+      "description": "Known one-second silent 64px fixture must pass measured metadata and loop checks.",
+      "contract": {
+        "owner": "script",
+        "strength": "required",
+        "basis": "Known one-second silent 64px fixture must pass measured metadata and loop checks."
+      },
+      "inputs": [
+        {
+          "source": "files/silent.mp4",
+          "dest": "silent.mp4"
+        }
+      ],
+      "steps": [
+        {
+          "id": "runtime",
+          "argv": [
+            "python-deps"
+          ],
+          "role": "precondition"
+        },
+        {
+          "id": "inspect",
+          "argv": [
+            "python",
+            "{skill}/scripts/inspect_avatar_delivery.py",
+            "{inputs}/silent.mp4",
+            "--expected-video-size",
+            "64x64",
+            "--target-duration",
+            "1",
+            "--expect-audio",
+            "silent",
+            "--loop-ssim"
+          ],
+          "stdout_artifact": "inspection.json"
+        }
+      ],
+      "checks": [
+        {
+          "id": "passed",
+          "type": "json-value",
+          "path": "inspection.json",
+          "pointer": "/summary/passed",
+          "expected": 1
+        },
+        {
+          "id": "duration",
+          "type": "json-value",
+          "path": "inspection.json",
+          "pointer": "/results/0/duration",
+          "expected": 1.0
+        },
+        {
+          "id": "loop",
+          "type": "json-value",
+          "path": "inspection.json",
+          "pointer": "/results/0/first_last_ssim",
+          "expected": 1.0
+        }
+      ],
+      "requires_tools": [
+        "ffprobe",
+        "ffmpeg"
+      ]
+    },
+    {
+      "id": "finite-duration-negative-control",
+      "profile": "media",
+      "description": "One-second fixture must fail a finite three-second target with small tolerance.",
+      "contract": {
+        "owner": "script",
+        "strength": "required",
+        "basis": "One-second fixture must fail a finite three-second target with small tolerance."
+      },
+      "inputs": [
+        {
+          "source": "files/silent.mp4",
+          "dest": "silent.mp4"
+        }
+      ],
+      "steps": [
+        {
+          "id": "runtime",
+          "argv": [
+            "python-deps"
+          ],
+          "role": "precondition"
+        },
+        {
+          "id": "inspect",
+          "argv": [
+            "python",
+            "{skill}/scripts/inspect_avatar_delivery.py",
+            "{inputs}/silent.mp4",
+            "--target-duration",
+            "3",
+            "--duration-tolerance",
+            "0.01"
+          ],
+          "expected_exit": "nonzero",
+          "stdout_artifact": "inspection.json"
+        }
+      ],
+      "checks": [
+        {
+          "id": "failed",
+          "type": "json-value",
+          "path": "inspection.json",
+          "pointer": "/summary/failed",
+          "expected": 1
+        }
+      ],
+      "requires_tools": [
+        "ffprobe"
+      ]
+    },
+    {
+      "id": "nan-target",
+      "profile": "media",
+      "description": "Non-finite numeric configuration must be rejected before reporting a compliant video.",
+      "contract": {
+        "owner": "script",
+        "strength": "required",
+        "basis": "Non-finite numeric configuration must be rejected before reporting a compliant video."
+      },
+      "inputs": [
+        {
+          "source": "files/silent.mp4",
+          "dest": "silent.mp4"
+        }
+      ],
+      "steps": [
+        {
+          "id": "runtime",
+          "argv": [
+            "python-deps"
+          ],
+          "role": "precondition"
+        },
+        {
+          "id": "inspect",
+          "argv": [
+            "python",
+            "{skill}/scripts/inspect_avatar_delivery.py",
+            "{inputs}/silent.mp4",
+            "--target-duration",
+            "nan"
+          ],
+          "expected_exit": "nonzero",
+          "stdout_artifact": "inspection.json",
+          "stderr_artifact": "reason.txt"
+        }
+      ],
+      "checks": [
+        {
+          "id": "rejection-reason",
+          "type": "manual",
+          "path": "reason.txt",
+          "rubric": "Confirm non-finite configuration was rejected for a numeric validation reason, not import/dependency failure. Bind review to the original stderr artifact."
+        }
+      ],
+      "diagnosis": {
+        "hypothesis": "NaN/Infinity is accepted by float parsing and bypasses finite-duration comparison.",
+        "confidence": "high",
+        "repair": "Validate target/tolerance/tail-window/threshold with math.isfinite before inspection.",
+        "regression": "Retain all three invalid-number cases plus finite positive/negative controls."
+      },
+      "requires_tools": [
+        "ffprobe"
+      ]
+    },
+    {
+      "id": "nan-tolerance",
+      "profile": "media",
+      "description": "Non-finite numeric configuration must be rejected before reporting a compliant video.",
+      "contract": {
+        "owner": "script",
+        "strength": "required",
+        "basis": "Non-finite numeric configuration must be rejected before reporting a compliant video."
+      },
+      "inputs": [
+        {
+          "source": "files/silent.mp4",
+          "dest": "silent.mp4"
+        }
+      ],
+      "steps": [
+        {
+          "id": "runtime",
+          "argv": [
+            "python-deps"
+          ],
+          "role": "precondition"
+        },
+        {
+          "id": "inspect",
+          "argv": [
+            "python",
+            "{skill}/scripts/inspect_avatar_delivery.py",
+            "{inputs}/silent.mp4",
+            "--target-duration",
+            "3",
+            "--duration-tolerance",
+            "nan"
+          ],
+          "expected_exit": "nonzero",
+          "stdout_artifact": "inspection.json",
+          "stderr_artifact": "reason.txt"
+        }
+      ],
+      "checks": [
+        {
+          "id": "rejection-reason",
+          "type": "manual",
+          "path": "reason.txt",
+          "rubric": "Confirm non-finite configuration was rejected for a numeric validation reason, not import/dependency failure. Bind review to the original stderr artifact."
+        }
+      ],
+      "diagnosis": {
+        "hypothesis": "NaN/Infinity is accepted by float parsing and bypasses finite-duration comparison.",
+        "confidence": "high",
+        "repair": "Validate target/tolerance/tail-window/threshold with math.isfinite before inspection.",
+        "regression": "Retain all three invalid-number cases plus finite positive/negative controls."
+      },
+      "requires_tools": [
+        "ffprobe"
+      ]
+    },
+    {
+      "id": "infinite-tolerance",
+      "profile": "media",
+      "description": "Non-finite numeric configuration must be rejected before reporting a compliant video.",
+      "contract": {
+        "owner": "script",
+        "strength": "required",
+        "basis": "Non-finite numeric configuration must be rejected before reporting a compliant video."
+      },
+      "inputs": [
+        {
+          "source": "files/silent.mp4",
+          "dest": "silent.mp4"
+        }
+      ],
+      "steps": [
+        {
+          "id": "runtime",
+          "argv": [
+            "python-deps"
+          ],
+          "role": "precondition"
+        },
+        {
+          "id": "inspect",
+          "argv": [
+            "python",
+            "{skill}/scripts/inspect_avatar_delivery.py",
+            "{inputs}/silent.mp4",
+            "--target-duration",
+            "3",
+            "--duration-tolerance",
+            "inf"
+          ],
+          "expected_exit": "nonzero",
+          "stdout_artifact": "inspection.json",
+          "stderr_artifact": "reason.txt"
+        }
+      ],
+      "checks": [
+        {
+          "id": "rejection-reason",
+          "type": "manual",
+          "path": "reason.txt",
+          "rubric": "Confirm non-finite configuration was rejected for a numeric validation reason, not import/dependency failure. Bind review to the original stderr artifact."
+        }
+      ],
+      "diagnosis": {
+        "hypothesis": "NaN/Infinity is accepted by float parsing and bypasses finite-duration comparison.",
+        "confidence": "high",
+        "repair": "Validate target/tolerance/tail-window/threshold with math.isfinite before inspection.",
+        "regression": "Retain all three invalid-number cases plus finite positive/negative controls."
+      },
+      "requires_tools": [
+        "ffprobe"
+      ]
+    },
+    {
+      "id": "broken-loop-negative-control",
+      "profile": "media",
+      "description": "Black first frame and white last frame must fail a 0.95 SSIM threshold.",
+      "contract": {
+        "owner": "script",
+        "strength": "required",
+        "basis": "Black first frame and white last frame must fail a 0.95 SSIM threshold."
+      },
+      "inputs": [
+        {
+          "source": "files/broken-loop.mp4",
+          "dest": "broken-loop.mp4"
+        }
+      ],
+      "steps": [
+        {
+          "id": "runtime",
+          "argv": [
+            "python-deps"
+          ],
+          "role": "precondition"
+        },
+        {
+          "id": "inspect",
+          "argv": [
+            "python",
+            "{skill}/scripts/inspect_avatar_delivery.py",
+            "{inputs}/broken-loop.mp4",
+            "--loop-ssim",
+            "--min-loop-ssim",
+            "0.95"
+          ],
+          "expected_exit": "nonzero",
+          "stdout_artifact": "inspection.json"
+        }
+      ],
+      "checks": [
+        {
+          "id": "failed",
+          "type": "json-value",
+          "path": "inspection.json",
+          "pointer": "/summary/failed",
+          "expected": 1
+        }
+      ],
+      "requires_tools": [
+        "ffprobe",
+        "ffmpeg"
+      ]
+    },
+    {
+      "id": "offline-helper-integration",
+      "profile": "media",
+      "description": "Scaffold, resolve, normalize, review and inspect synthetic assets; never promote them to approved.",
+      "contract": {
+        "owner": "script",
+        "strength": "required",
+        "basis": "Scaffold, resolve, normalize, review and inspect synthetic assets; never promote them to approved."
+      },
+      "inputs": [
+        {
+          "source": "files/alpha.png",
+          "dest": "alpha.png"
+        }
+      ],
+      "steps": [
+        {
+          "id": "runtime",
+          "argv": [
+            "python-deps"
+          ],
+          "role": "precondition"
+        },
+        {
+          "id": "init",
+          "argv": [
+            "python",
+            "{skill}/scripts/init_avatar_project.py",
+            "{outputs}/project",
+            "--project-name",
+            "offline-fixture-demo"
+          ]
+        },
+        {
+          "id": "prompt",
+          "argv": [
+            "python",
+            "{skill}/scripts/assemble_avatar_prompt.py",
+            "{outputs}/project/brief/ip-template-selection-p01.json",
+            "--catalog",
+            "{outputs}/project/brief/ip-template-catalog.snapshot.json",
+            "--stage",
+            "neutral-base",
+            "--resolved-output",
+            "{outputs}/project/review/resolved.json"
+          ]
+        },
+        {
+          "id": "normalize",
+          "argv": [
+            "python",
+            "{skill}/scripts/normalize_avatar_png.py",
+            "{inputs}/alpha.png",
+            "--output-dir",
+            "{outputs}/project/candidates"
+          ]
+        },
+        {
+          "id": "sheet",
+          "argv": [
+            "python",
+            "{skill}/scripts/build_review_sheet.py",
+            "{inputs}/alpha.png",
+            "{outputs}/project/candidates/alpha.png",
+            "--output",
+            "{outputs}/project/review/contact-sheets/board.png",
+            "--columns",
+            "2",
+            "--labels",
+            "SYNTHETIC SOURCE",
+            "NORMALIZED CANDIDATE"
+          ]
+        },
+        {
+          "id": "inspect",
+          "argv": [
+            "python",
+            "{skill}/scripts/inspect_avatar_delivery.py",
+            "{outputs}/project/candidates/alpha.png",
+            "--expected-image-size",
+            "720x720",
+            "--require-alpha"
+          ],
+          "stdout_artifact": "project/review/qa/inspection.json"
+        }
+      ],
+      "checks": [
+        {
+          "id": "size",
+          "type": "image-property",
+          "path": "project/candidates/alpha.png",
+          "property": "size",
+          "expected": [
+            720,
+            720
+          ]
+        },
+        {
+          "id": "qa",
+          "type": "json-value",
+          "path": "project/review/qa/inspection.json",
+          "pointer": "/summary/passed",
+          "expected": 1
+        },
+        {
+          "id": "forced-outfit",
+          "type": "json-value",
+          "path": "project/review/resolved.json",
+          "pointer": "/forced_by_stage/outfit",
+          "expected": "plain-base-tee"
+        },
+        {
+          "id": "not-approved",
+          "type": "directory-count",
+          "path": "project/approved",
+          "expected": 0
+        }
+      ]
+    }
+  ]
+}

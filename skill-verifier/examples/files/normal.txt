@@ -1,0 +1,3 @@
+Invoice 203
+Currency: USD
+Total: 1,240.50

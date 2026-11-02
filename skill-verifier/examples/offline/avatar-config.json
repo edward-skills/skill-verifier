@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "name": "avatar-offline-diagnostic-configure-runtime-first",
+  "tools": {
+    "python": ["python3"],
+    "python-deps": ["python3", "-c", "import shutil; from PIL import Image,ImageDraw,ImageFont; assert shutil.which('ffmpeg') and shutil.which('ffprobe'), 'configure the child PATH for FFmpeg tools'"],
+    "ffmpeg": ["ffmpeg"],
+    "ffprobe": ["ffprobe"]
+  },
+  "filesystem_isolation": {"mode": "none"},
+  "process_environment": {"inherit": []}
+}

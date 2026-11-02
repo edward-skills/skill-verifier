@@ -1,0 +1,11 @@
+__pycache__/
+*.py[cod]
+.venv/
+.ci-venv/
+.DS_Store
+dist/
+evidence/
+.env
+.env.*
+!.env.example
+node_modules/
