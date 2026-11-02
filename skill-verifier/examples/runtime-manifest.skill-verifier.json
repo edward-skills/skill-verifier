@@ -5,6 +5,7 @@
     "scripts/isolation.py",
     "scripts/offline.py",
     "scripts/demo.py",
+    "scripts/runtime_paths.py",
     "LICENSE.md",
     "examples/offline/profiles.json",
     "references/task-profiles.md",

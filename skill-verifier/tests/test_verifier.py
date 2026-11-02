@@ -11,6 +11,7 @@ import tempfile
 import unittest
 import venv
 from unittest import mock
+from runtime_support import python_runtime_paths
 
 SPEC = importlib.util.spec_from_file_location("verifier", Path(__file__).parents[1] / "scripts" / "verifier.py")
 v = importlib.util.module_from_spec(SPEC)
@@ -80,6 +81,9 @@ class VerifierTests(unittest.TestCase):
         self.temp.cleanup()
 
     def execute(self, name="workspace"):
+        if self.adapter.get("filesystem_isolation", {}).get("mode", "none") != "none":
+            boundary = self.adapter["filesystem_isolation"]
+            boundary["readable_paths"] = list(dict.fromkeys(boundary.get("readable_paths", []) + python_runtime_paths()))
         v.write_json(self.suite_path, self.suite)
         v.write_json(self.adapter_path, self.adapter)
         return v.run_suite(argparse.Namespace(skill=str(self.target), suite=str(self.suite_path),
@@ -506,7 +510,7 @@ pathlib.Path(sys.argv[2]).write_text(json.dumps({"approved":os.environ.get("QA_P
         virtual = self.sources / ".venv"
         venv.EnvBuilder(with_pip=False, symlinks=True).create(virtual)
         self.adapter["argv"][0] = str(Path(getattr(sys, "_base_executable", None) or sys.executable).resolve())
-        self.adapter["filesystem_isolation"] = {"mode": "macos-sandbox", "readable_paths": [str(self.fake)], "allow_network": False}
+        self.adapter["filesystem_isolation"] = {"mode": "macos-sandbox", "readable_paths": [str(self.fake)] + python_runtime_paths(), "allow_network": False}
         v.write_json(self.suite_path, self.suite)
         v.write_json(self.adapter_path, self.adapter)
         env, _ = v.isolation.task_environment({}, self.root / "driver-state")

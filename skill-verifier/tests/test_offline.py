@@ -8,6 +8,7 @@ from pathlib import Path
 import sys
 import tempfile
 import unittest
+from runtime_support import python_runtime_paths
 
 SPEC = importlib.util.spec_from_file_location("verifier_offline_tests", Path(__file__).parents[1] / "scripts/verifier.py")
 v = importlib.util.module_from_spec(SPEC)
@@ -67,6 +68,9 @@ class OfflineTests(unittest.TestCase):
         self.temp.cleanup()
 
     def execute(self, name="out", repeats=1, manifest=True):
+        if self.config["filesystem_isolation"]["mode"] != "none":
+            boundary = self.config["filesystem_isolation"]
+            boundary["readable_paths"] = list(dict.fromkeys(boundary.get("readable_paths", []) + python_runtime_paths()))
         v.write_json(self.suite_path,self.suite)
         v.write_json(self.config_path,self.config)
         return o.run(argparse.Namespace(skill=str(self.skill),suite=str(self.suite_path),config=str(self.config_path),

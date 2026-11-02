@@ -6,7 +6,7 @@ from pathlib import Path
 import shutil
 import subprocess
 import sys
-import sysconfig
+from runtime_paths import python_runtime_paths
 
 
 def write(path, value):
@@ -43,8 +43,7 @@ def main():
         mode = "macos-sandbox" if sys.platform == "darwin" and Path("/usr/bin/sandbox-exec").is_file() else "linux-bwrap" if sys.platform.startswith("linux") and shutil.which("bwrap") else "none"
     boundary = {"mode": mode}
     if mode != "none":
-        runtime = [sysconfig.get_path("stdlib"), sysconfig.get_config_var("LIBDIR")]
-        boundary.update(allow_network=False, readable_paths=list(dict.fromkeys(str(Path(p).resolve()) for p in runtime if p and Path(p).exists())))
+        boundary.update(allow_network=False, readable_paths=python_runtime_paths())
     executable = str(Path(sys.executable).absolute())
     if args.scenario == "blocked":
         executable = str(root / "deliberately-unavailable-python")

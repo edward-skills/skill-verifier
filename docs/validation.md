@@ -23,7 +23,7 @@ This version adds packaging, rights notices, installation documentation and a sy
 
 Installer tests are performed in fresh temporary projects with copied files and isolated home state. They verify discovery and package contents, without launching any agent model or changing global agent configuration.
 
-Author distribution checks on 2026-11-02 reproduced all 94 tests without skips on macOS. The model-free clean/defect/blocked controls returned pass/fail/incomplete respectively. `skills` CLI 1.7.2 copy-installed the local source for all five listed agent targets; all 40 package files matched their source hashes. This is installer evidence, not real agent execution or native activation.
+Author distribution checks on 2026-11-02 reproduced all 94 tests without skips on macOS. The model-free clean/defect/blocked controls returned pass/fail/incomplete respectively. `skills` CLI 1.7.2 copy-installed the source for all five listed agent targets and checked every package file against its source hash. This is installer evidence, not real agent execution or native activation. Demo/test configurations explicitly discover the selected Python's library directories and framework binary, including an Xcode.app runtime; the evaluator does not grant the entire application tree.
 
 ## Run checks
 

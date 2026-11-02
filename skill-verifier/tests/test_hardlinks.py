@@ -8,6 +8,7 @@ import sys
 import tempfile
 import unittest
 from unittest import mock
+from runtime_support import python_runtime_paths
 
 SPEC = importlib.util.spec_from_file_location("verifier_hardlink_tests", Path(__file__).parents[1] / "scripts/verifier.py")
 v = importlib.util.module_from_spec(SPEC)
@@ -122,7 +123,7 @@ class HardlinkRunnerTests(unittest.TestCase):
     def execute(self,name,grant):
         config=self.root/(name+".json")
         v.write_json(config,{"schema_version":1,"name":"hardlink-native","tools":{"python":[sys.executable]},
-            "filesystem_isolation":{"mode":"macos-sandbox","allow_network":False,"readable_paths":[str(grant)]}})
+            "filesystem_isolation":{"mode":"macos-sandbox","allow_network":False,"readable_paths":[str(grant)] + python_runtime_paths()}})
         return v.offline_module().run(argparse.Namespace(skill=str(self.skill),suite=str(self.suite_path),config=str(config),
             runtime_manifest=str(self.manifest),out=str(self.root/name),repeats=1))
 
@@ -151,7 +152,7 @@ class HardlinkRunnerTests(unittest.TestCase):
             return record
         config=self.root/"postcondition-config.json"
         v.write_json(config,{"schema_version":1,"name":"postcondition-fixture","tools":{"python":[sys.executable]},
-            "filesystem_isolation":{"mode":"macos-sandbox","allow_network":False,"readable_paths":[str(self.runtime)]}})
+            "filesystem_isolation":{"mode":"macos-sandbox","allow_network":False,"readable_paths":[str(self.runtime)] + python_runtime_paths()}})
         with mock.patch.object(module,"execute_step",side_effect=mutate_after_step):
             result=module.run(argparse.Namespace(skill=str(self.skill),suite=str(self.suite_path),config=str(config),
                 runtime_manifest=str(self.manifest),out=str(self.root/"postcondition"),repeats=1))
