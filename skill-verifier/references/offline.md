@@ -13,6 +13,8 @@ verifier.py offline-review EVIDENCE --reviews REVIEWS_JSON
 
 Initialization inventories scripts, parses Python syntax without executing it, proposes a task profile, and writes disabled CLI-help and domain cases. Review `inventory.json` syntax findings as well as `lint`; these are not silently folded into an execution score. Confirm the profile; auto selection is only a text heuristic. Add real inputs, steps and independent assertions; enable applicable cases and remove explicitly inapplicable proposals with an explanation in the QA report. A disabled draft stays pending and prevents a passing offline gate.
 
+When no supported helper is discovered under `scripts/`, auto selects `documents` and records `execution_scope: source-review-only`; an explicit profile remains unchanged. Inspect the package, references, templates and written contract. Do not invent a CLI or count source review as successful website/task execution. Existing exported artifacts can still be graded on their own evidence. All generated cases remain disabled until an operator defines appropriate steps and independent checks.
+
 Review every file in `runtime-proposal.json` before using it. It proposes the package files except excluded eval/test/cache files; this is not evidence that their content is safe or free of answers. Prune evaluation material wherever it is named. Only the explicit manifest stages files beyond `SKILL.md`; omitting it stages no helper scripts. Do not place expected answers in inputs, tool prefixes or staged runtime resources.
 
 The profile catalog covers code, data, media, documents, and recorded automation. Profiles are starting points, not universal assertions. For research/advisory skills use frozen inputs and a task-specific semantic rubric; browsing freshness remains outside offline coverage. `examples/offline/code-suite.json` illustrates a concrete data assertion but remains disabled until adapted to the actual target CLI.
@@ -67,6 +69,8 @@ The runner reuses 0.2.1's clean environment, task-local HOME/cache/temp, narrow 
 Version 0.3.1 additionally rejects hard-linked declared oracle files before the probe, and verifies their identity/content after the probe and task. A runtime hardlink alias must not yield an enforced/pass result. If this check fails, remove oracle aliases and use clean evaluator-owned files; do not relax runtime grants or fall back to mode none as a passing result. See the [runner boundary contract](runner.md) for the precise scope: independent answer copies and concurrent privileged changes are not certified by this check.
 
 `offline-run` exits: 0 local offline gate pass, 1 observed gating failure, 2 incomplete, 3 invalid setup. A passing offline gate additionally requires an enforced/probed boundary, complete required correctness checks and no disabled drafts. It does not establish universal skill quality, native activation, model effect, other harnesses, remote tool isolation or authorization behavior.
+
+Results always report `whole_skill_verdict: not-assessed` separately from `offline_gate`. This keeps a passing helper or source-document audit from becoming a whole-skill certificate. A final human report must state any broader untested scope explicitly; importing a document review does not establish agent task behavior.
 
 ## Report files
 

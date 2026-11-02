@@ -253,6 +253,33 @@ class OfflineTests(unittest.TestCase):
         inventory=v.read_json(self.root/"draft/inventory.json")
         self.assertEqual(inventory["python_syntax"][0]["status"],"fail")
 
+    def test_auto_without_helpers_reviews_documents_without_inventing_cli(self):
+        (self.skill/"scripts/run.py").unlink()
+        (self.skill/"SKILL.md").write_text("---\nname: sample-skill\ndescription: Plan a website with image and CSV content.\n---\nReview the supplied content.\n")
+        result=o.init(argparse.Namespace(skill=str(self.skill),out=str(self.root/"draft"),profile="auto"))
+        self.assertEqual(result["profile"],"documents")
+        self.assertEqual(result["execution_scope"],"source-review-only")
+        suite=v.read_json(self.root/"draft/suite.json")
+        o.validate(suite,self.root/"draft")
+        self.assertTrue(all(not c["enabled"] and not c["steps"] for c in suite["cases"]))
+        self.assertEqual(v.read_json(self.root/"draft/inventory.json")["scripts"],[])
+
+    def test_explicit_profile_without_helpers_is_preserved(self):
+        (self.skill/"scripts/run.py").unlink()
+        result=o.init(argparse.Namespace(skill=str(self.skill),out=str(self.root/"draft"),profile="data"))
+        self.assertEqual(result["profile"],"data")
+        self.assertEqual(result["executed"],0)
+        self.assertTrue(all(c["profile"]=="data" and not c["enabled"] for c in v.read_json(self.root/"draft/suite.json")["cases"]))
+
+    def test_auto_with_helpers_retains_domain_selection(self):
+        for label,description in [("code","Transform integers."),("data","Extract an invoice."),("media","Process video with ffmpeg.")]:
+            with self.subTest(profile=label):
+                (self.skill/"SKILL.md").write_text("---\nname: sample-skill\ndescription: "+description+"\n---\nUse scripts/run.py.\n")
+                result=o.init(argparse.Namespace(skill=str(self.skill),out=str(self.root/("draft-"+label)),profile="auto"))
+                self.assertEqual(result["profile"],label)
+                self.assertEqual(result["execution_scope"],"helper-commands-and-artifacts")
+                self.assertTrue(any(c["steps"] for c in v.read_json(self.root/("draft-"+label)/"suite.json")["cases"]))
+
     @unittest.skipUnless(sys.platform=="darwin" and os.environ.get("SKILL_VERIFIER_TEST_SANDBOX")=="1","Native macOS boundary requires opt-in")
     def test_native_boundary_denies_original_suite(self):
         self.config["filesystem_isolation"]={"mode":"macos-sandbox","allow_network":False}
@@ -261,6 +288,8 @@ class OfflineTests(unittest.TestCase):
         result=self.execute()
         self.assertEqual(result["runs"][0]["filesystem_isolation"]["status"],"enforced")
         self.assertEqual(result["summary"]["offline_gate"],"pass")
+        self.assertEqual(result["summary"]["whole_skill_verdict"],"not-assessed")
+        self.assertIn("Whole-skill verdict: **not assessed**",(self.root/"out/report.md").read_text())
         proof=result["runs"][0]["filesystem_isolation"]["private_file_identity"]
         self.assertTrue(proof["verified_after_probe"] and proof["verified_after_task"])
 

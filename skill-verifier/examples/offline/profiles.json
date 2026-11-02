@@ -16,9 +16,9 @@
     {"id":"media-creative-review","owner":"agent","description":"Reserve identity, aesthetics, realistic edges, motion physics and approval behavior for artifact review or later model tests.","basis":"A helper's local success cannot establish agent decisions or creative output quality."}
   ],
   "documents": [
-    {"id":"document-structure","owner":"artifact","description":"Parse an existing local export and verify required facts, sections and file integrity.","basis":"Use observable deliverable requirements, not exact freeform wording."},
-    {"id":"document-render-review","owner":"artifact","description":"Render the real artifact and retain a manual check for clipping, hierarchy, localization and legibility.","basis":"File presence and parser success do not prove the document is usable."},
-    {"id":"document-edit-preservation","owner":"artifact","description":"Check preserved user content and promised changes against the source and a minimal fixture.","basis":"Apply the user's actual edit contract; do not invent missing content."}
+    {"id":"document-structure","owner":"artifact","description":"Inspect source documents or an existing local export; verify required facts, structure, references and file integrity.","basis":"Use observable document requirements. Written instructions do not prove that an agent followed them."},
+    {"id":"document-render-review","owner":"artifact","description":"If a rendered task artifact exists, review clipping, hierarchy, localization and legibility. For an instructions-only package, review its written acceptance criteria and keep actual rendering untested.","basis":"Source review and parser success do not establish generated-artifact quality."},
+    {"id":"document-edit-preservation","owner":"artifact","description":"Check source preservation and declared scope. When an edited task artifact exists, compare promised changes with the original and a minimal fixture.","basis":"Apply the actual edit contract; do not invent outputs or treat source review as task execution."}
   ],
   "automation": [
     {"id":"automation-fixture-success","owner":"script","description":"Use a recorded response or local fake service; verify object identity, state transition and request handling.","basis":"Fixtures establish local handling only; they do not authorize or prove a live external write."},

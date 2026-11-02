@@ -1,5 +1,11 @@
 # Validation and compatibility
 
+## Current 0.3.3 changes
+
+No-helper targets now default to disabled document-review cases and record `execution_scope: source-review-only`; explicit profile choices and helper-domain selection are preserved. Offline results and reports carry a separate `whole_skill_verdict: not-assessed`, including when the local gate passes. The grading and filesystem-isolation requirements are unchanged.
+
+Author native macOS regression passed all 97 tests without skips, including three new initialization regressions and an enforced-pass scope assertion. The frozen 0.3.2 independent acceptance below does not certify this later change. Real model, native activation and cross-harness task testing remain deferred.
+
 ## Frozen core evidence
 
 Independent macOS offline QA accepted core 0.3.1 on 2026-11-02: 94 tests passed without skips, plus separately authored hardlink probes. The original reviewed archive SHA-256 was `cbceadc4023db2235b5bbfa2c46ed1cd227459bf313a638428c1ed93c52d8d83`.

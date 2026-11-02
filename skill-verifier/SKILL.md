@@ -2,7 +2,7 @@
 name: skill-verifier
 description: Evaluate an existing agent skill with task-specific QA, reproducible behavioral tests, baseline comparisons, cross-harness checks, and evidence-based repair recommendations. Use when testing skill quality, reviewing readiness, diagnosing unreliable skills, or verifying a revision.
 metadata:
-  version: "0.3.2"
+  version: "0.3.3"
   license: "Invocation-only; see LICENSE.md"
   repository: "https://github.com/edward-skills/skill-verifier"
 ---
@@ -51,9 +51,9 @@ For offline helper testing, read [offline command QA](references/offline.md). St
 python3 /path/to/skill-verifier/scripts/verifier.py offline-init --skill /path/to/target --profile auto --out /path/to/new-plan
 ```
 
-Review the inventory, script source, proposed profile and runtime files. Turn applicable drafts into concrete commands and independent checks, then use `offline-validate` and `offline-run` as documented. Do not rebuild a bespoke Python test driver when the command plan and bundled artifact checks express the contract. Generated drafts are disabled; missing tests remain pending. Use exact values for data, real pixel/render review for media, frozen responses for automation, and explicit manual rubrics for semantics. Never infer universal coverage from a case count.
+Review the inventory, script source, proposed profile and runtime files. If no supported helpers are found, auto selects document review; inspect the package and its written contracts without inventing a CLI. Keep generated artifacts and agent task behavior untested unless they were actually observed. Turn applicable drafts into concrete commands and independent checks, then use `offline-validate` and `offline-run` as documented. Do not rebuild a bespoke Python test driver when the command plan and bundled artifact checks express the contract. Generated drafts are disabled; missing tests remain pending. Use exact values for data, real pixel/render review for media, frozen responses for automation, and explicit manual rubrics for semantics. Never infer universal coverage from a case count.
 
-Offline suites test commands and artifacts without a model. Preserve every repetition, output hash and failure; test malformed inputs and relevant negative controls. Their gate is local to the declared contract and cannot establish agent behavior, native discovery or model uplift. Online validation can remain untested while the offline report is delivered.
+Offline suites test commands and artifacts without a model. Preserve every repetition, output hash and failure; test malformed inputs and relevant negative controls. Their gate is local to the declared contract; the separate `whole_skill_verdict` remains `not-assessed` and cannot establish agent behavior, native discovery or model uplift. Online validation can remain untested while the offline report is delivered.
 
 Use a new workspace and clean context for each case, repetition, harness, and configuration. Compare the candidate to no target skill, or to the previous snapshot for revisions. Keep task, model/settings, tool access, fixtures, and checker versions equal within a pair. Explicit file loading tests instruction execution; it does **not** test native installation or activation. Verify discovery separately through the harness's actual skill mechanism.
 

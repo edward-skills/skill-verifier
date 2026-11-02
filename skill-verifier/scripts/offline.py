@@ -283,7 +283,7 @@ def summarize(result):
         reasons.append("Draft cases remain unexecuted")
     failed = any(r["status"] == "fail" for r in blocking)
     gate = "fail" if failed else "incomplete" if reasons else "pass"
-    return {"offline_gate": gate, "case_counts": counts, "planned_runs": len(rows),
+    return {"offline_gate": gate, "whole_skill_verdict": "not-assessed", "case_counts": counts, "planned_runs": len(rows),
             "gating_case_counts": {state: sum(r["status"] == state for r in blocking) for state in V.STATES},
             "advisory_case_counts": {state: sum(r["status"] == state for r in rows if not r["gating"]) for state in V.STATES},
             "assertion_counts": dict(collections.Counter(g["status"] for r in rows for g in r["grades"])),
@@ -324,6 +324,7 @@ def save_report(out, result):
     V.write_json(out / "coverage.json", coverage)
     summary = result["summary"]
     lines = ["# Offline Skill QA", "", "Offline gate: **" + summary["offline_gate"] + "**", "",
+             "Whole-skill verdict: **not assessed**. Task/model quality, native activation and cross-harness behavior require separate evidence.", "",
              summary["scope"], "", "Counts: " + json.dumps(summary["case_counts"]) + ". Native/model comparison: not-run.", "",
              "Required cases: " + json.dumps(summary["gating_case_counts"]) + "; recommendations: " + json.dumps(summary["advisory_case_counts"]) + ".", "",
              "## Observed evidence", "", "| Case / repeat | Contract owner | Result | Gating | Evidence |",
@@ -504,22 +505,26 @@ def init(args):
     profile = args.profile
     if profile == "auto":
         text = (skill / "SKILL.md").read_text(encoding="utf-8").lower()
-        profile = "media" if any(x in text for x in ["pillow", "ffmpeg", "image", "video"]) else "data" if any(x in text for x in ["csv", "spreadsheet", "invoice"]) else "code"
+        profile = "documents" if not scripts else "media" if any(x in text for x in ["pillow", "ffmpeg", "image", "video"]) else "data" if any(x in text for x in ["csv", "spreadsheet", "invoice"]) else "code"
+    execution_scope = "source-review-only" if not scripts else "helper-commands-and-artifacts"
     for item in catalog[profile]:
         cases.append({"id": item["id"], "profile": profile, "description": item["description"], "enabled": False,
             "contract": {"owner": item["owner"], "strength": "recommendation", "basis": item["basis"]}, "steps": [], "checks": []})
     suite = {"schema_version": 1, "kind": "offline", "name": skill.name + " offline draft", "cases": cases}
     V.write_json(out / "suite.json", suite)
     V.write_json(out / "inventory.json", {"target": str(skill), "fingerprint": V.fingerprint(files), "suggested_profile": profile,
-        "profile_selection": "heuristic suggestion; operator review required", "python_syntax": syntax, "scripts": scripts})
+        "profile_selection": "heuristic suggestion; operator review required", "execution_scope": execution_scope,
+        "python_syntax": syntax, "scripts": scripts})
     V.write_json(out / "runtime-proposal.json", {"schema_version": 1, "candidate": [rel for rel, p in files if rel != "SKILL.md"], "baseline": []})
     V.write_json(out / "config.json", {"schema_version": 1, "name": "local-offline", "tools": {"python": [sys.executable]},
         "filesystem_isolation": {"mode": "none"}, "process_environment": {"inherit": []}})
-    (out / "REVIEW.md").write_text("# Review before execution\n\nAll cases are disabled drafts. Inspect target scripts; confirm CLI flags, contract ownership, legitimate fixtures and independent assertions. "
+    source_note = ("No supported helper scripts were discovered under scripts/. Auto selects documents for source review; do not invent a CLI or count written instructions as successful task execution. "
+                   "Actual website/artifact generation, native activation and cross-harness behavior remain untested.\n\n") if not scripts else ""
+    (out / "REVIEW.md").write_text("# Review before execution\n\n" + source_note + "All cases are disabled drafts. Inspect target scripts; confirm CLI flags, contract ownership, legitimate fixtures and independent assertions. "
         "Review/prune every exact runtime-proposal file for grading answers before passing it as --runtime-manifest. No file is staged merely because it is proposed. "
         "Configure trusted tools/runtime dependencies and an enforced boundary where available; none mode remains diagnostic. "
         "Enable applicable cases only after adding concrete steps/checks. Disabled drafts remain pending. Agent responsibilities and recommendations do not fail a script gate.\n", encoding="utf-8")
-    return {"status": "draft", "profile": profile, "cases": len(cases), "out": str(out), "executed": 0}
+    return {"status": "draft", "profile": profile, "execution_scope": execution_scope, "cases": len(cases), "out": str(out), "executed": 0}
 
 
 def review(args):

@@ -13,6 +13,8 @@ and untested scope. Do not call models or external accounts or modify the target
 
 Resolve helper paths relative to the loaded skill, not a guessed global install directory. Run `offline-init` for a target inventory and disabled drafts, review them, then `offline-validate` and `offline-run`. Read [offline QA](offline.md) before configuring tools or isolation. An arbitrary target still needs an appropriate task contract; no generic template guarantees coverage.
 
+If the target has no supported helpers under `scripts/`, auto starts with source-document review. Audit its package, links, templates and written contracts; do not invent CLI tests. Generated website/artifact behavior, native activation and cross-harness results remain untested without actual execution evidence. A local pass keeps `whole_skill_verdict: not-assessed`.
+
 ## Model-free example
 
 From the repository root:

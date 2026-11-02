@@ -20,7 +20,7 @@ import time
 import unicodedata
 from urllib.parse import unquote, urlsplit
 
-VERSION = "0.3.2"
+VERSION = "0.3.3"
 STATES = ("pass", "fail", "blocked", "pending")
 IGNORED = {".git", "__pycache__", ".DS_Store"}
 EVAL_ONLY = {"evals", "tests"}

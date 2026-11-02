@@ -1,5 +1,7 @@
 # Skill Verifier
 
+当前版本：**0.3.3**。没有可识别 helper 的目标默认生成文档审阅草案；离线报告单独显示整体 skill 能力尚未评估。[新版说明](docs/releases/v0.3.3.md)。下文的独立验收对应冻结的 0.3.2，新改动使用单独的作者/CI 证据。
+
 [全部 Skills](https://github.com/edward-skills) · [English](README.md) · [验证范围](docs/validation.md)
 
 按真实任务契约检测 skill，保留可复查证据，给出修正建议和回归检查。可以先做本地脚本与产物 QA；模型对比需要另行配置和授权。

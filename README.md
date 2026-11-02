@@ -1,5 +1,7 @@
 # Skill Verifier
 
+Current version: **0.3.3**. Targets without supported helpers start with document-review drafts; offline results explicitly keep the whole-skill verdict unassessed. See [release notes](docs/releases/v0.3.3.md). Independent acceptance below applies to the frozen 0.3.2 release; these additions have separate author/CI evidence.
+
 [All Skills](https://github.com/edward-skills) · [简体中文](README.zh-CN.md) · [Validation scope](docs/validation.md)
 
 Test an agent skill against its actual contract, retain evidence, and propose fixes with regression checks. Start with local scripts and artifacts; use model comparisons only when separately configured and authorized.
